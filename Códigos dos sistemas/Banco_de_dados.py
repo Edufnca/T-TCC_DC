@@ -10,7 +10,8 @@ conexao = mysql.connector.connect(
 )
 cursor = conexao.cursor()
 
-# Adicionar Prova - Creat
+# tabelas: provas, tarefas
+
 def add_prova(nome, data, nota):
     comando_add_prova = f'INSERT INTO provas (name_prova, data_prova, notas_prova ) VALUES ("{nome}", {data},"{nota}")'
     cursor.execute(comando_add_prova)
@@ -18,9 +19,48 @@ def add_prova(nome, data, nota):
     cursor.close()
     conexao.close()
 
-#Ler todas as provas - Read
-def read_prova():
-    comando = f'SELECT * FROM provas'
+def add_tarefa(nome, data, descricao):
+    comando_add_prova = f'INSERT INTO tarefas (name_tarefa, data_tarefa, descricao_tarefa ) VALUES ("{nome}", {data},"{descricao}")'
+    cursor.execute(comando_add_prova)
+    conexao.commit()
+    cursor.close()
+    conexao.close()
+
+def add_compromomisso(nome, data, descricao):
+    comando_add_prova = f'INSERT INTO compromissos (name_compromisso, data_compromisso, descricao_compromisso ) VALUES ("{nome}", {data},"{descricao}")'
+    cursor.execute(comando_add_prova)
+    conexao.commit()
+    cursor.close()
+    conexao.close()
+
+def add_anotacao(titulo, descricao):
+    comando_add_prova = f'INSERT INTO anotacoes (name_anotacao, descricao_anotacao ) VALUES ("{titulo}", "{descricao}")'
+    cursor.execute(comando_add_prova)
+    conexao.commit()
+    cursor.close()
+    conexao.close()
+
+def read_bd(tabela):
+    comando = f'SELECT * FROM {tabela}'
     cursor.execute(comando)
     resultado = cursor.fetchall()
+    cursor.close()
+    conexao.close()
     return resultado
+
+def delete_bd(tabela, id):
+    comando = f'DELETE FROM {tabela} WHERE name_prova = "{id}"'
+    cursor.execute(comando)
+    conexao.commit()
+    cursor.close()
+    conexao.close()
+
+def update_bd(tabela, novo_valor, id):
+    comando = f'UPDATE {tabela} SET valor = {novo_valor} WHERE nome_produto = "{id}"'
+    cursor.execute(comando)
+    conexao.commit()
+    cursor.close()
+    conexao.close()
+
+
+
