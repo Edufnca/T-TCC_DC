@@ -148,8 +148,6 @@ def aula_semana():
         else:
             print(Aulas[4][au])
 
-
-
 Aulas.append(Segunda)
 Aulas.append(Terca)
 Aulas.append(Quarta)

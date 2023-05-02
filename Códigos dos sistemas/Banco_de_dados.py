@@ -33,6 +33,13 @@ def add_compromomisso(nome, data, descricao):
     cursor.close()
     conexao.close()
 
+def read_compromissos_data():
+    comando = f'SELECT data_compromisso FROM compromissos'
+    resultado = conexao.cursor()
+    cursor.execute(comando)
+    cursor.close()
+    return resultado
+
 def add_anotacao(titulo, descricao):
     comando_add_prova = f'INSERT INTO anotacoes (name_anotacao, descricao_anotacao ) VALUES ("{titulo}", "{descricao}")'
     cursor.execute(comando_add_prova)

@@ -1,31 +1,21 @@
-from datetime import date, datetime
-import mysql.connector
-
-conexao = mysql.connector.connect(
-    host='localhost',
-    user='root',
-    password='',
-    database='bot_telebot',
-)
-cursor = conexao.cursor()
-def read_compromissos_data():
-    comando = f'SELECT data_compromisso FROM compromissos'
-    cursor.execute(comando)
-    resultado = cursor.fetchall()
-    cursor.close()
-    conexao.close()
-    return resultado
+from datetime import date, datetime, timedelta
+from Banco_de_dados import *
+from Dicionario import *
+import random
 def notifica_compromisso():
-    data_atual = date.today()
-    data_compromisso = read_compromissos_data()
-    data_tresD = datetime(year=0, month=0, day=3)
-    for data_compromisso in data_compromisso:
-        data_notifica = data_compromisso - data_tresD
-        if data_atual == data_notifica:
+    data_atual = datetime.now().date()
+    data_notificacao = data_atual + timedelta(days=3)
+    read_compromissos_data()
+    for compromisso in read_compromissos_data():
+        data_compromisso = compromisso[0].date()
+        if data_atual == data_notificacao.date():
             comando = f'SELECT name_compromisso FROM compromissos WHERE data_compromisso = {data_compromisso}'
             cursor.execute(comando)
             compromisso = cursor.fetchall()
-            notificacao = f"Olá, falta 3 dias para o {compromisso}"
+            mensagem = random.choice(mensagem_alerta_compromisso)
+            notificacao = f"{mensagem} {compromisso}"
+            return notificacao
+    conexao.close()
 
 
 
