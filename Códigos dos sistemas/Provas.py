@@ -1,28 +1,19 @@
-from datetime import date, datetime
-import mysql.connector
+from datetime import date, datetime, timedelta
+from Dicionario import *
+import random
+from Banco_de_dados import *
 
-conexao = mysql.connector.connect(
-    host='localhost',
-    user='root',
-    password='',
-    database='bot_telebot',
-)
-cursor = conexao.cursor()
-def read_provas_data():
-    comando = f'SELECT data_prova FROM provas'
-    cursor.execute(comando)
-    resultado = cursor.fetchall()
-    cursor.close()
-    conexao.close()
-    return resultado
 def notifica_provas():
-    data_atual = date.today()
-    data_prova = read_provas_data()
-    data_tresD = datetime(year=0, month=0, day=3)
-    for data_prova in data_prova:
-        data_notifica = data_prova - data_tresD
-        if data_atual == data_notifica:
-            comando = f'SELECT name_prova FROM provas WHERE data_prova = {data_prova}'
+    data_atual = datetime.now().date()
+    data_notificacao = data_atual + timedelta(days=3)
+    read = read_bd('data', 'prova')
+    for prova in read():
+        data_compromisso = prova[0].date()
+        if data_atual == data_notificacao.date():
+            comando = f'SELECT name_prova FROM provas WHERE data_prova = {data_notificacao}'
             cursor.execute(comando)
             prova = cursor.fetchall()
-            notificacao = f"Olá, falta 3 dias para a {prova}"
+            mensagem = random.choice(mensagem_alerta_prova)
+            notificacao = f"{mensagem} {prova}"
+            return notificacao
+    conexao.close()

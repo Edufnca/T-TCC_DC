@@ -17,6 +17,7 @@ chamadas = [
     #Vocabulario
 sim = ['Sim', 'SIM', 'S', 's', 'si']
 nao = ['Não', 'nao', 'não', 'Nao', 'NAo', 'NÃO']
+dia_semana = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sabado', 'Domingo']
 
     #Mensagens
 mensagem_temperatura_baixa = [
@@ -42,6 +43,9 @@ mensagem_temperatura_alta = [
 ]
 mensagem_alerta_compromisso = [
     "Lembrete: Você tem um compromisso em 3 dias!  "
+]
+mensagem_alerta_prova = [
+    "Lembrete: Você tem uma prova em 3 dias!  "
 ]
 
 #Dicionario = {

@@ -1,73 +1,162 @@
 import mysql.connector
-
-#Código que realiza conexão ao banco de dados e suas respectivas funções
+from Dicionario import *
 
 conexao = mysql.connector.connect(
     host='localhost',
     user='root',
     password='',
     database='bot_telebot',
+    charset='utf8mb4'
 )
 cursor = conexao.cursor()
 
-# tabelas: provas, tarefas
+# TABELAS: anotacao, aula, compromisso, prova, tarefa
 
-def add_prova(nome, data, nota):
-    comando_add_prova = f'INSERT INTO provas (name_prova, data_prova, notas_prova ) VALUES ("{nome}", {data},"{nota}")'
-    cursor.execute(comando_add_prova)
-    conexao.commit()
-    cursor.close()
-    conexao.close()
+def add_prova(codigo, assunto, materia, data, dia_da_semana):
+    if dia_da_semana in dia_semana:
+        try:
+            comando_add_prova = f'INSERT INTO prova (codigo, assunto, materia, data, dia_da_semana ) VALUES ("{codigo}", "{assunto}", "{materia}", {data}, "{dia_da_semana}")'
+            cursor.execute(comando_add_prova)
+            conexao.commit()
+            cursor.close()
+            conexao.close()
+        except:
+            msg_erro = 'Erro ao inserir prova'
+            return msg_erro
+    else: return "digite um dia da semana: Segunda, Terça, Quarta, Quinta, Sexta, Sabado, Domingo"
 
-def add_tarefa(nome, data, descricao):
-    comando_add_prova = f'INSERT INTO tarefas (name_tarefa, data_tarefa, descricao_tarefa ) VALUES ("{nome}", {data},"{descricao}")'
-    cursor.execute(comando_add_prova)
-    conexao.commit()
-    cursor.close()
-    conexao.close()
+def add_tarefa(codigo, descricao, data_inicial,data_final , materia):
+    try:
+        comando_add_prova = f'INSERT INTO tarefa (codigo, descricao, data, materia) VALUES ("{codigo}", "{descricao}", {data_inicial}, {data_final}, "{materia}")'
+        cursor.execute(comando_add_prova)
+        conexao.commit()
+        cursor.close()
+        conexao.close()
+    except:
+        msg_erro = 'Erro ao inserir tarefa'
+        return msg_erro
 
-def add_compromomisso(nome, data, descricao):
-    comando_add_prova = f'INSERT INTO compromissos (name_compromisso, data_compromisso, descricao_compromisso ) VALUES ("{nome}", {data},"{descricao}")'
-    cursor.execute(comando_add_prova)
-    conexao.commit()
-    cursor.close()
-    conexao.close()
+def add_compromomisso(id, nome, data, descricao):
+    try:
+        comando_add_prova = f'INSERT INTO compromisso (id, nome, data, descricao ) VALUES ("{id}","{nome}", {data},"{descricao}")'
+        cursor.execute(comando_add_prova)
+        conexao.commit()
+        cursor.close()
+        conexao.close()
+    except:
+        msg_erro = 'Erro ao inserir compromisso'
+        return msg_erro
 
-def read_compromissos_data():
-    comando = f'SELECT data_compromisso FROM compromissos'
-    resultado = conexao.cursor()
-    cursor.execute(comando)
-    cursor.close()
-    return resultado
+def add_anotacao(data, nome, anotacao):
+    try:
+        comando_add_prova = f'INSERT INTO anotacao (data ,nome , anotacao) VALUES ({data}, "{nome}", "{anotacao}")'
+        cursor.execute(comando_add_prova)
+        conexao.commit()
+        cursor.close()
+        conexao.close()
+    except:
+        msg_erro = 'Erro ao inserir anotação'
+        return msg_erro
 
-def add_anotacao(titulo, descricao):
-    comando_add_prova = f'INSERT INTO anotacoes (name_anotacao, descricao_anotacao ) VALUES ("{titulo}", "{descricao}")'
-    cursor.execute(comando_add_prova)
-    conexao.commit()
-    cursor.close()
-    conexao.close()
+def add_aula(id, aula, horario_inicial, horario_final, materia, dia_da_semana, sala):
+    try:
+        comando = f"INSERT INTO aula (id, aula, horario_inicial, horario_final, materia, dia_da_semana, sala) VALUES {id}, '{aula}',{horario_inicial}, {horario_final}, '{materia}', '{dia_da_semana}', {sala} "
+        cursor.execute(comando)
+        conexao.commit()
+        cursor.close()
+        conexao.close()
+    except:
+        msg_erro = 'Erro ao inserir aula'
+        return msg_erro
 
-def read_bd(tabela):
-    comando = f'SELECT * FROM {tabela}'
+def read_bd(atributo, tabela):
+    comando = f'SELECT {atributo} FROM {tabela}'
     cursor.execute(comando)
     resultado = cursor.fetchall()
     cursor.close()
     conexao.close()
     return resultado
 
-def delete_bd(tabela, id):
-    comando = f'DELETE FROM {tabela} WHERE name_prova = "{id}"'
-    cursor.execute(comando)
-    conexao.commit()
-    cursor.close()
-    conexao.close()
+def read_parametro_txt(atributo,tabela, condicao, parametro):
+    try:
+        conexao.cursor()
+        comando = f'SELECT {atributo} FROM {tabela} WHERE "{condicao}" = "{parametro}"'
+        cursor.execute(comando)
+        resultado = cursor.fetchall()
+        if resultado is not None:
+            return resultado
+        else:
+            msg_erro = 'nada selecionado'
+            return msg_erro
+    except:
+        msg_erro = 'erro ao selecionar a linha da tabela'
+        return msg_erro
 
-def update_bd(tabela, novo_valor, id):
-    comando = f'UPDATE {tabela} SET valor = {novo_valor} WHERE nome_produto = "{id}"'
-    cursor.execute(comando)
-    conexao.commit()
-    cursor.close()
-    conexao.close()
+def read_parametro_int(atributo,tabela, condicao, parametro):
+    try:
+        conexao.cursor()
+        comando = f'SELECT {atributo} FROM {tabela} WHERE {condicao} = {parametro}'
+        cursor.execute(comando)
+        resultado = cursor.fetchall()
+        if resultado is not None:
+            return resultado
+        else:
+            msg_erro = 'nada selecionado'
+            return msg_erro
+    except:
+        msg_erro = 'erro ao selecionar a linha da tabela aula'
+        return msg_erro
 
+def delete_bd(tabela):
+    try:
+        comando = f'DELETE FROM {tabela}'
+        cursor.execute(comando)
+        conexao.commit()
+        cursor.close()
+        conexao.close()
+    except:
+        msg_erro = 'erro ao apagar tabela'
+        return msg_erro
 
+def delete_parametro_txt(tabela, condicao, parametro):
+    try:
+        comando = f'DELETE FROM {tabela} WHERE "{condicao}" = "{parametro}"'
+        cursor.execute(comando)
+        conexao.commit()
+        cursor.close()
+        conexao.close()
+    except:
+        msg_erro = 'erro ao apagar tabela'
+        return msg_erro
 
+def delete_parametro_int(tabela, condicao, parametro):
+    try:
+        comando = f'DELETE FROM {tabela} WHERE {condicao} = {parametro}'
+        cursor.execute(comando)
+        conexao.commit()
+        cursor.close()
+        conexao.close()
+    except:
+        msg_erro = 'erro ao apagar a tabela'
+        return msg_erro
+def update_txt(tabela, novo_valor, condicao, parametro):
+    try:
+        comando = f'UPDATE {tabela} SET valor = "{novo_valor}" WHERE "{condicao}" = "{parametro}"'
+        cursor.execute(comando)
+        conexao.commit()
+        cursor.close()
+        conexao.close()
+    except:
+        msg_erro = 'erro ao atualizar a tabela'
+        return msg_erro
+
+def update_int(tabela, novo_valor, condicao, parametro):
+    try:
+        comando = f'UPDATE {tabela} SET valor = {novo_valor} WHERE {condicao} = {parametro}'
+        cursor.execute(comando)
+        conexao.commit()
+        cursor.close()
+        conexao.close()
+    except:
+        msg_erro = 'erro ao atualizar a tabela'
+        return msg_erro

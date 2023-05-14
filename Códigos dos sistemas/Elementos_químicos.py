@@ -1,7 +1,7 @@
 Quimica = list()
 
 Elementos_quimicos = {
-"H": {
+    "H": {
         "nome": "Hidrogênio",
         "massa_quantica": 1.008,
         "numero_atomico": 1,
